@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ismael Koné — Analyste Cybersécurité</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fdf6ee;
+  --warm-white: #fffbf5;
+  --amber: #e8721c;
+  --amber-light: #f5924a;
+  --amber-pale: #fde8d4;
+  --amber-soft: #fdf0e4;
+  --brown: #2d1a0e;
+  --brown-mid: #5a3a22;
+  --brown-light: #8b6347;
+  --slate: #1e2a3a;
+  --slate-mid: #3d4f62;
+  --slate-light: #6b7f94;
+  --gold: #c8861a;
+  --gold-light: #e8a832;
+  --teal: #1a7a6e;
+  --teal-light: #2aaa99;
+  --red-soft: #c94040;
+  --border: rgba(232,114,28,0.15);
+  --shadow: 0 4px 30px rgba(45,26,14,0.08);
+  --shadow-hover: 0 12px 50px rgba(45,26,14,0.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--brown);font-family:'DM Sans',sans-serif;overflow-x:hidden;line-height:1.6}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--cream)}
+::-webkit-scrollbar-thumb{background:var(--amber);border-radius:3px}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:500;background:rgba(253,246,238,0.94);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);padding:0 60px;display:flex;align-items:center;justify-content:space-between;height:68px;transition:box-shadow .3s}
+nav.scrolled{box-shadow:0 4px 30px rgba(45,26,14,0.08)}
+.nav-brand{display:flex;align-items:center;gap:12px}
+.nav-initials{width:40px;height:40px;background:var(--amber);color:white;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:16px}
+.nav-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--brown)}
+.nav-links{display:flex;gap:35px;list-style:none}
+.nav-links a{color:var(--brown-light);text-decoration:none;font-size:14px;font-weight:500;transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--amber);transition:width .3s;border-radius:1px}
+.nav-links a:hover{color:var(--amber)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{background:var(--amber);color:white;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:all .3s;border:none;cursor:pointer;font-family:'DM Sans',sans-serif}
+.nav-cta:hover{background:var(--amber-light);transform:translateY(-1px);box-shadow:0 6px 20px rgba(232,114,28,0.35)}
+
+/* ADMIN TOGGLE - HIDDEN */
+.admin-toggle{display:none !important}
+
+/* PASSWORD MODAL */
+#pw-modal{display:none;position:fixed;inset:0;background:rgba(45,26,14,.7);z-index:9000;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+#pw-modal.open{display:flex}
+.pw-box{background:white;border-radius:16px;padding:40px;width:380px;box-shadow:0 30px 80px rgba(45,26,14,.2)}
+.pw-box h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--brown);margin-bottom:8px}
+.pw-box p{font-size:14px;color:var(--brown-light);margin-bottom:25px}
+.pw-input{width:100%;background:var(--cream);border:2px solid var(--border);color:var(--brown);font-family:'DM Mono',monospace;font-size:16px;padding:12px 16px;outline:none;border-radius:8px;transition:border-color .3s;letter-spacing:3px}
+.pw-input:focus{border-color:var(--amber)}
+.pw-error{font-size:12px;color:var(--red-soft);margin-top:8px;min-height:16px}
+.pw-actions{display:flex;gap:10px;margin-top:20px}
+.pw-btn{flex:1;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-radius:8px;border:none;transition:all .3s}
+.pw-btn-confirm{background:var(--amber);color:white}
+.pw-btn-confirm:hover{background:var(--amber-light)}
+.pw-btn-cancel{background:var(--cream);color:var(--brown-light);border:1px solid var(--border)}
+.pw-btn-cancel:hover{background:var(--amber-pale)}
+
+/* ADMIN PANEL */
+#admin-panel{display:none;position:fixed;top:68px;right:0;width:420px;height:calc(100vh - 68px);background:white;border-left:1px solid var(--border);z-index:400;overflow-y:auto;flex-direction:column;box-shadow:-10px 0 40px rgba(45,26,14,.1)}
+#admin-panel.open{display:flex}
+.admin-header{padding:24px 28px;border-bottom:1px solid var(--border);background:var(--amber-soft)}
+.admin-header h3{font-family:'Playfair Display',serif;font-size:18px;color:var(--brown);margin-bottom:4px}
+.admin-header p{font-size:12px;color:var(--brown-light)}
+.admin-close-btn{position:absolute;top:16px;right:20px;background:transparent;border:none;color:var(--brown-light);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;transition:all .3s;z-index:410}
+.admin-close-btn:hover{background:var(--amber-pale);color:var(--amber)}
+.admin-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--warm-white)}
+.admin-tab{flex:1;padding:13px;text-align:center;font-size:12px;font-weight:600;color:var(--brown-light);cursor:pointer;border:none;background:transparent;transition:all .3s;font-family:'DM Sans',sans-serif}
+.admin-tab.active{color:var(--amber);border-bottom:2px solid var(--amber);background:white}
+.admin-tab:hover{color:var(--amber)}
+.admin-body{padding:24px 28px;flex:1}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--brown-light);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.form-input{width:100%;background:var(--cream);border:1.5px solid var(--border);color:var(--brown);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 14px;outline:none;border-radius:8px;transition:border-color .3s}
+.form-input:focus{border-color:var(--amber)}
+.form-input::placeholder{color:var(--brown-light);opacity:.5}
+.form-select{width:100%;background:var(--cream);border:1.5px solid var(--border);color:var(--brown);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 14px;outline:none;border-radius:8px;cursor:pointer}
+.btn-add{width:100%;padding:12px;background:var(--amber);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s;margin-top:4px}
+.btn-add:hover{background:var(--amber-light);transform:translateY(-1px)}
+.admin-sep{border:none;border-top:1px solid var(--border);margin:20px 0}
+.item-list{margin-top:16px}
+.item-card{background:var(--cream);border:1px solid var(--border);padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-radius:8px;transition:all .3s}
+.item-card:hover{border-color:var(--amber);background:var(--amber-soft)}
+.item-info{flex:1;min-width:0}
+.item-title{font-size:13px;font-weight:600;color:var(--brown);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-meta{font-size:11px;color:var(--brown-light);margin-top:2px}
+.item-actions{display:flex;gap:6px;flex-shrink:0}
+.btn-del{padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;border-radius:6px;border:1px solid rgba(201,64,64,.3);color:var(--red-soft);background:transparent;transition:all .3s;font-family:'DM Sans',sans-serif}
+.btn-del:hover{background:rgba(201,64,64,.1)}
+
+/* TOAST */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--brown);color:white;padding:12px 28px;font-size:13px;font-weight:500;z-index:9998;transition:transform .3s;border-radius:10px;box-shadow:0 8px 30px rgba(45,26,14,.25)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding:100px 60px 60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;right:-200px;top:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(232,114,28,.12) 0%,transparent 70%);pointer-events:none}
+.hero-bg2{position:absolute;left:-100px;bottom:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(26,122,110,.07) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--amber-pale);color:var(--amber);padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;margin-bottom:24px;border:1px solid rgba(232,114,28,.2)}
+.hero-badge-dot{width:8px;height:8px;border-radius:50%;background:var(--amber);animation:pulse-warm 2s infinite}
+@keyframes pulse-warm{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(38px,5vw,64px);font-weight:900;line-height:1.1;color:var(--brown);margin-bottom:16px}
+.hero-title em{color:var(--amber);font-style:normal;position:relative}
+.hero-title em::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--amber),var(--gold-light));border-radius:2px;opacity:.4}
+.hero-subtitle{font-size:17px;color:var(--brown-light);line-height:1.7;margin-bottom:36px;max-width:480px}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap}
+.btn-primary{background:var(--amber);color:white;padding:14px 28px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;transition:all .3s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{background:var(--amber-light);transform:translateY(-2px);box-shadow:0 10px 30px rgba(232,114,28,.35)}
+.btn-secondary{background:transparent;color:var(--brown);padding:14px 28px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;transition:all .3s;border:2px solid var(--border);display:inline-flex;align-items:center;gap:8px}
+.btn-secondary:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px)}
+.hero-visual{position:relative}
+.hero-card{background:white;border-radius:20px;padding:28px;box-shadow:var(--shadow-hover);border:1px solid var(--border)}
+.hero-card-top{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.hero-avatar{width:56px;height:56px;background:linear-gradient(135deg,var(--amber),var(--gold));border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:white}
+.hero-card-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--brown)}
+.hero-card-role{font-size:12px;color:var(--brown-light);margin-top:2px}
+.hero-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px}
+.hero-stat{text-align:center;background:var(--amber-soft);border-radius:10px;padding:14px 8px}
+.hero-stat-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--amber);display:block}
+.hero-stat-label{font-size:11px;color:var(--brown-light);margin-top:2px}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px}
+.hero-tag{background:var(--cream);border:1px solid var(--border);color:var(--brown-mid);font-size:12px;padding:6px 12px;border-radius:100px;font-weight:500}
+
+/* SECTION SHARED */
+.section-wrap{max-width:1100px;margin:0 auto;padding:0 60px}
+.section-label{font-size:13px;font-weight:600;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:block}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,44px);font-weight:700;color:var(--brown);margin-bottom:16px;line-height:1.2}
+.section-desc{font-size:16px;color:var(--brown-light);max-width:580px;line-height:1.7}
+.section-divider{width:60px;height:3px;background:linear-gradient(90deg,var(--amber),var(--gold-light));border-radius:2px;margin:20px 0 50px}
+
+/* ABOUT */
+#about{padding:100px 0;background:var(--warm-white);border-top:1px solid var(--border)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.about-text p{font-size:16px;color:var(--brown-mid);line-height:1.8;margin-bottom:16px}
+.about-text strong{color:var(--amber)}
+.about-highlight{background:var(--amber-soft);border-left:4px solid var(--amber);padding:20px 24px;border-radius:0 12px 12px 0;margin:24px 0;font-size:15px;color:var(--brown-mid);font-style:italic}
+.about-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.about-card{background:white;border:1px solid var(--border);border-radius:14px;padding:22px;transition:all .3s;position:relative;overflow:hidden}
+.about-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--amber)}
+.about-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-3px)}
+.about-card-icon{font-size:26px;margin-bottom:10px;display:block}
+.about-card-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--brown);margin-bottom:6px}
+.about-card-desc{font-size:13px;color:var(--brown-light);line-height:1.6}
+
+/* EXPERTISE */
+#expertise{padding:100px 0}
+.expertise-intro{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start;margin-bottom:60px}
+.expertise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.exp-card{background:white;border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s;position:relative;overflow:hidden}
+.exp-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-4px);border-color:var(--amber)}
+.exp-card-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px}
+.icon-amber{background:var(--amber-pale)}
+.icon-teal{background:rgba(26,122,110,.1)}
+.icon-slate{background:rgba(30,42,58,.07)}
+.exp-card-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--brown);margin-bottom:8px}
+.exp-card-desc{font-size:14px;color:var(--brown-light);line-height:1.7;margin-bottom:16px}
+.exp-card-tech{font-size:12px;color:var(--amber);font-weight:600;background:var(--amber-pale);padding:4px 10px;border-radius:100px;display:inline-block}
+.tooltip-wrap{position:relative;display:inline-block}
+.tooltip-term{border-bottom:1.5px dashed var(--amber);color:var(--amber);cursor:help;font-weight:600}
+.tooltip-box{display:none;position:absolute;bottom:130%;left:50%;transform:translateX(-50%);background:var(--brown);color:white;padding:10px 14px;border-radius:10px;font-size:12px;width:220px;text-align:center;z-index:100;box-shadow:0 8px 20px rgba(45,26,14,.2);line-height:1.5}
+.tooltip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--brown)}
+.tooltip-wrap:hover .tooltip-box{display:block}
+
+/* SKILLS */
+#skills{padding:100px 0;background:var(--warm-white);border-top:1px solid var(--border)}
+.skills-layout{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.skills-bars{display:flex;flex-direction:column;gap:20px}
+.skill-item{background:white;border:1px solid var(--border);border-radius:12px;padding:18px 22px;transition:all .3s}
+.skill-item:hover{border-color:var(--amber);box-shadow:var(--shadow)}
+.skill-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.skill-name{font-size:14px;font-weight:600;color:var(--brown)}
+.skill-plain{font-size:11px;color:var(--brown-light);margin-top:1px}
+.skill-pct{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--amber)}
+.skill-track{height:8px;background:var(--cream);border-radius:100px;overflow:hidden}
+.skill-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold-light));border-radius:100px;width:0;transition:width 1.5s cubic-bezier(.4,0,.2,1)}
+.skill-cat-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 10px;border-radius:100px;margin-top:8px;display:inline-block}
+.cat-offensive{background:rgba(201,64,64,.1);color:var(--red-soft)}
+.cat-defensive{background:rgba(26,122,110,.1);color:var(--teal)}
+.cat-development{background:rgba(200,134,26,.12);color:var(--gold)}
+.cat-network{background:rgba(61,79,98,.1);color:var(--slate-mid)}
+.cat-other{background:var(--amber-pale);color:var(--amber)}
+.skills-terminal{background:var(--brown);border-radius:16px;padding:0;overflow:hidden;box-shadow:var(--shadow-hover)}
+.term-topbar{background:rgba(255,255,255,.05);padding:14px 20px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.term-dot{width:10px;height:10px;border-radius:50%}
+.term-title{color:rgba(255,255,255,.4);font-size:12px;margin-left:8px;font-family:'DM Mono',monospace}
+.term-body{padding:24px;font-family:'DM Mono',monospace;font-size:13px;line-height:2}
+.t-cmd{color:#e8a832}
+.t-flag{color:#64d0f0}
+.t-section{color:rgba(255,255,255,.35)}
+.t-plus{color:#5ecc7b}
+.t-name{color:rgba(255,255,255,.85)}
+.t-arrow{color:rgba(255,255,255,.3)}
+.t-expert{color:#5ecc7b;font-weight:600}
+.t-avance{color:#64d0f0}
+.t-moyen{color:#e8a832}
+.t-cursor{animation:blink 1s infinite;color:#e8a832}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* EXPERIENCE */
+#experience{padding:100px 0}
+.exp-layout{display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:start}
+.exp-timeline{position:relative}
+.exp-timeline::before{content:'';position:absolute;left:20px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--amber),transparent);opacity:.3}
+.exp-item{position:relative;padding-left:55px;margin-bottom:40px}
+.exp-dot{position:absolute;left:12px;top:6px;width:18px;height:18px;border-radius:50%;background:white;border:3px solid var(--amber);box-shadow:0 0 0 4px rgba(232,114,28,.1)}
+.exp-card-wrap{background:white;border:1px solid var(--border);border-radius:14px;padding:24px;transition:all .3s}
+.exp-card-wrap:hover{box-shadow:var(--shadow-hover);border-color:var(--amber)}
+.exp-period{font-size:12px;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.exp-role{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--brown);margin-bottom:4px}
+.exp-company{font-size:14px;color:var(--brown-light);margin-bottom:12px;font-weight:500}
+.exp-desc{font-size:14px;color:var(--brown-mid);line-height:1.7}
+.exp-empty{background:var(--cream);border:2px dashed var(--border);border-radius:14px;padding:40px;text-align:center;color:var(--brown-light);font-size:14px}
+.exp-side-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--brown);margin-bottom:16px}
+.exp-side-text{font-size:15px;color:var(--brown-light);line-height:1.8;margin-bottom:24px}
+.cert-list{display:flex;flex-direction:column;gap:10px}
+.cert-item{display:flex;align-items:center;gap:12px;background:white;border:1px solid var(--border);border-radius:10px;padding:14px 18px;font-size:13px;font-weight:500;color:var(--brown);transition:all .3s}
+.cert-item:hover{border-color:var(--amber);background:var(--amber-soft)}
+.cert-icon{font-size:20px;flex-shrink:0}
+
+/* PROJECTS */
+#projects{padding:100px 0;background:var(--warm-white);border-top:1px solid var(--border)}
+.projects-intro{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:end;margin-bottom:50px}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:24px}
+.proj-card{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s}
+.proj-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-5px);border-color:var(--amber)}
+.proj-card-top{padding:24px 24px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.proj-icon{width:46px;height:46px;border-radius:12px;background:var(--amber-pale);display:flex;align-items:center;justify-content:center;font-size:22px}
+.proj-badge{font-size:11px;font-weight:700;padding:5px 12px;border-radius:100px;text-transform:uppercase;letter-spacing:.5px}
+.badge-active{background:rgba(26,122,110,.1);color:var(--teal)}
+.badge-complete{background:rgba(200,134,26,.12);color:var(--gold)}
+.proj-body{padding:20px 24px 24px}
+.proj-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--brown);margin-bottom:8px}
+.proj-desc{font-size:14px;color:var(--brown-light);line-height:1.7;margin-bottom:18px}
+.proj-tags{display:flex;flex-wrap:wrap;gap:6px}
+.proj-tag{font-size:11px;font-weight:500;padding:4px 10px;background:var(--cream);border:1px solid var(--border);color:var(--brown-mid);border-radius:100px}
+.proj-empty{background:var(--cream);border:2px dashed var(--border);border-radius:16px;padding:60px;text-align:center;color:var(--brown-light)}
+.proj-empty span{display:block;font-size:36px;margin-bottom:12px;opacity:.4}
+
+/* CONTACT */
+#contact{padding:100px 0}
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start}
+.contact-info h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--brown);margin-bottom:12px}
+.contact-info p{font-size:15px;color:var(--brown-light);line-height:1.8;margin-bottom:30px}
+.contact-links{display:flex;flex-direction:column;gap:12px}
+.contact-link{display:flex;align-items:center;gap:14px;background:white;border:1px solid var(--border);border-radius:12px;padding:16px 20px;text-decoration:none;color:var(--brown);font-weight:500;font-size:14px;transition:all .3s}
+.contact-link:hover{border-color:var(--amber);background:var(--amber-soft);transform:translateX(4px)}
+.contact-link-icon{width:38px;height:38px;border-radius:10px;background:var(--amber-pale);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.contact-link-text{font-size:13px;color:var(--brown-light);margin-top:1px}
+.contact-form{background:white;border:1px solid var(--border);border-radius:20px;padding:36px;box-shadow:var(--shadow)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field-group{margin-bottom:20px}
+.field-label{display:block;font-size:13px;font-weight:600;color:var(--brown-mid);margin-bottom:8px}
+.field-input{width:100%;background:var(--cream);border:1.5px solid var(--border);color:var(--brown);font-family:'DM Sans',sans-serif;font-size:14px;padding:12px 16px;outline:none;border-radius:10px;transition:all .3s}
+.field-input:focus{border-color:var(--amber);background:white;box-shadow:0 0 0 4px rgba(232,114,28,.08)}
+.field-input::placeholder{color:var(--brown-light);opacity:.5}
+.send-btn{width:100%;padding:15px;background:var(--amber);color:white;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px}
+.send-btn:hover{background:var(--amber-light);transform:translateY(-2px);box-shadow:0 10px 30px rgba(232,114,28,.3)}
+
+/* FOOTER */
+footer{background:var(--brown);color:rgba(255,255,255,.6);padding:40px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.footer-brand{font-family:'Playfair Display',serif;font-size:18px;color:white}
+.footer-copy{font-size:13px}
+.footer-links{display:flex;gap:24px}
+.footer-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:13px;transition:color .3s}
+.footer-links a:hover{color:var(--amber-light)}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+.fade-up.visible{opacity:1;transform:none}
+
+@media(max-width:900px){
+  nav{padding:0 24px}.nav-links{display:none}
+  #hero{padding:90px 24px 50px}
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .hero-visual{display:none}
+  .section-wrap{padding:0 24px}
+  .about-grid,.expertise-intro,.skills-layout,.exp-layout,.contact-wrap,.projects-intro{grid-template-columns:1fr;gap:40px}
+  .expertise-grid{grid-template-columns:1fr 1fr}
+  footer{padding:30px 24px;flex-direction:column;text-align:center}
+}
+@media(max-width:600px){
+  .expertise-grid,.projects-grid,.form-row{grid-template-columns:1fr}
+  .about-cards{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- PASSWORD MODAL -->
+<div id="pw-modal">
+  <div class="pw-box">
+    <h3> Espace Administrateur</h3>
+    <p>Entrez votre mot de passe pour modifier le portfolio.</p>
+    <input class="pw-input" id="pw-input" type="password" placeholder="••••••••" maxlength="32" autocomplete="off" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div class="pw-error" id="pw-error"></div>
+    <div class="pw-actions">
+      <button class="pw-btn pw-btn-cancel" onclick="closePwModal()">Annuler</button>
+      <button class="pw-btn pw-btn-confirm" onclick="checkPassword()">Connexion</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <button class="admin-close-btn" onclick="closeAdmin()">✕</button>
+  <div class="admin-header">
+    <h3> Administration</h3>
+    <p>Modifiez votre contenu en temps réel — sauvegarde automatique</p>
+  </div>
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="switchTab('projects-tab',this)">Projets</button>
+    <button class="admin-tab" onclick="switchTab('skills-tab',this)">Compétences</button>
+    <button class="admin-tab" onclick="switchTab('exp-tab',this)">Expérience</button>
+    <button class="admin-tab" onclick="switchTab('profile-tab',this)">Profil</button>
+  </div>
+  <div class="admin-body">
+
+    <!-- PROJECTS -->
+    <div class="tab-content active" id="projects-tab">
+      <div class="form-group"><label class="form-label">Nom court (dossier)</label><input class="form-input" id="p-name" placeholder="ex: IDS_System"></div>
+      <div class="form-group"><label class="form-label">Titre affiché</label><input class="form-input" id="p-title" placeholder="ex: Système de détection d'intrusion"></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="p-desc" rows="3" placeholder="Ce que fait ce projet..."></textarea></div>
+      <div class="form-group"><label class="form-label">Technologies (séparées par virgule)</label><input class="form-input" id="p-tags" placeholder="Python, Suricata, Linux"></div>
+      <div class="form-group"><label class="form-label">Statut</label><select class="form-select" id="p-status"><option value="active">En cours</option><option value="complete">Terminé</option></select></div>
+      <button class="btn-add" onclick="addProject()">+ Ajouter le projet</button>
+      <hr class="admin-sep">
+      <div class="item-list" id="projects-list"></div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="tab-content" id="skills-tab">
+      <div class="form-group"><label class="form-label">Compétence</label><input class="form-input" id="s-name" placeholder="ex: Penetration Testing"></div>
+      <div class="form-group"><label class="form-label">Description simple (pour visiteurs)</label><input class="form-input" id="s-plain" placeholder="ex: Tester la sécurité d'un système"></div>
+      <div class="form-group"><label class="form-label">Niveau (0-100)</label><input class="form-input" id="s-level" type="number" min="0" max="100" placeholder="90"></div>
+      <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="s-cat"><option value="offensive">Attaque</option><option value="defensive">Défense</option><option value="development">Développement</option><option value="network">Réseau</option><option value="other">Autre</option></select></div>
+      <button class="btn-add" onclick="addSkill()">+ Ajouter la compétence</button>
+      <hr class="admin-sep">
+      <div class="item-list" id="skills-list"></div>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="tab-content" id="exp-tab">
+      <div class="form-group"><label class="form-label">Poste / Rôle</label><input class="form-input" id="e-role" placeholder="ex: Analyste Cybersécurité"></div>
+      <div class="form-group"><label class="form-label">Entreprise</label><input class="form-input" id="e-company" placeholder="ex: SecureCorp"></div>
+      <div class="form-group"><label class="form-label">Période</label><input class="form-input" id="e-date" placeholder="ex: 2022 — 2024"></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="e-desc" rows="3" placeholder="Vos missions..."></textarea></div>
+      <button class="btn-add" onclick="addExperience()">+ Ajouter l'expérience</button>
+      <hr class="admin-sep">
+      <div class="item-list" id="exp-list"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="tab-content" id="profile-tab">
+      <div class="form-group"><label class="form-label">Nom complet</label><input class="form-input" id="prof-name" placeholder="Ismael Koné"></div>
+      <div class="form-group"><label class="form-label">Titre professionnel</label><input class="form-input" id="prof-role" placeholder="Expert en Cybersécurité"></div>
+      <div class="form-group"><label class="form-label">Phrase d'accroche</label><textarea class="form-input" id="prof-bio" rows="3" placeholder="Je protège les systèmes informatiques..."></textarea></div>
+      <div class="form-group"><label class="form-label">Années d'expérience</label><input class="form-input" id="prof-years" type="number" placeholder="5"></div>
+      <div class="form-group"><label class="form-label">Projets réalisés</label><input class="form-input" id="prof-projects" type="number" placeholder="47"></div>
+      <div class="form-group"><label class="form-label">Certifications</label><input class="form-input" id="prof-certs" type="number" placeholder="12"></div>
+      <button class="btn-add" onclick="saveProfile()"> Sauvegarder le profil</button>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-brand">
+    <div class="nav-initials" id="nav-initials">IK</div>
+    <div class="nav-name" id="nav-name">Ismael Koné</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">À propos</a></li>
+    <li><a href="#expertise">Expertise</a></li>
+    <li><a href="#skills">Compétences</a></li>
+    <li><a href="#experience">Parcours</a></li>
+    <li><a href="#projects">Projets</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Me contacter</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-bg2"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge fade-up">
+        <div class="hero-badge-dot"></div>
+        <span>Disponible pour missions</span>
+      </div>
+      <h1 class="hero-title fade-up" id="hero-title">
+        Je protège<br>vos systèmes <em id="hero-em">numériques</em>
+      </h1>
+      <p class="hero-subtitle fade-up" id="hero-subtitle">Spécialiste en cybersécurité, j'identifie les failles de vos systèmes avant les pirates, et je mets en place des défenses robustes pour protéger vos données.</p>
+      <div class="hero-actions fade-up">
+        <a href="#projects" class="btn-primary">Voir mes projets →</a>
+        <a href="#contact" class="btn-secondary"> Me contacter</a>
+      </div>
+    </div>
+    <div class="hero-visual fade-up">
+      <div class="hero-card">
+        <div class="hero-card-top">
+          <div>
+            <div class="hero-avatar" id="card-initials">IK</div>
+          </div>
+          <div>
+            <div class="hero-card-name" id="card-name">Ismael Koné</div>
+            <div class="hero-card-role" id="card-role">Expert Cybersécurité</div>
+          </div>
+          <div style="margin-left:auto;font-size:22px">🛡</div>
+        </div>
+        <div class="hero-stat-row">
+          <div class="hero-stat"><span class="hero-stat-num" id="stat-years" data-target="5">0</span><div class="hero-stat-label">ans d'exp.</div></div>
+          <div class="hero-stat"><span class="hero-stat-num" id="stat-proj" data-target="47">0</span><div class="hero-stat-label">projets</div></div>
+          <div class="hero-stat"><span class="hero-stat-num" id="stat-certs" data-target="12">0</span><div class="hero-stat-label">certifs</div></div>
+        </div>
+        <div class="hero-tags" id="hero-tags">
+          <span class="hero-tag"> Détection d'intrusions</span>
+          <span class="hero-tag"> Tests de sécurité</span>
+          <span class="hero-tag"> Protection réseau</span>
+          <span class="hero-tag"> Python</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="about-grid">
+      <div class="about-text fade-up">
+        <span class="section-label">À propos</span>
+        <h2 class="section-title">Qui suis-je ?</h2>
+        <div class="section-divider"></div>
+        <p id="about-p1">Passionné par la <strong>sécurité informatique</strong>, j'aide les entreprises à comprendre et renforcer leur posture de sécurité numérique. Mon rôle, c'est d'anticiper les cyberattaques avant qu'elles ne surviennent.</p>
+        <p id="about-p2">Avec <span id="about-years">5</span> ans d'expérience sur le terrain, j'ai travaillé sur des systèmes de surveillance réseau, des audits de sécurité et des simulations d'attaques pour tester la robustesse des défenses.</p>
+        <div class="about-highlight">"La meilleure défense, c'est de penser comme un attaquant — mais agir pour protéger."</div>
+      </div>
+      <div class="about-cards fade-up">
+        <div class="about-card">
+          <span class="about-card-icon"></span>
+          <div class="about-card-title">Audit de sécurité</div>
+          <div class="about-card-desc">Analyse complète de votre système pour trouver les points faibles avant les cybercriminels.</div>
+        </div>
+        <div class="about-card">
+          <span class="about-card-icon"></span>
+          <div class="about-card-title">Protection réseau</div>
+          <div class="about-card-desc">Mise en place de barrières numériques pour bloquer les accès non autorisés.</div>
+        </div>
+        <div class="about-card">
+          <span class="about-card-icon"></span>
+          <div class="about-card-title">Détection des menaces</div>
+          <div class="about-card-desc">Surveillance en temps réel pour détecter toute activité suspecte sur votre réseau.</div>
+        </div>
+        <div class="about-card">
+          <span class="about-card-icon"></span>
+          <div class="about-card-title">Réponse aux incidents</div>
+          <div class="about-card-desc">Intervention rapide en cas d'attaque pour limiter les dégâts et reprendre le contrôle.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERTISE -->
+<section id="expertise">
+  <div class="section-wrap">
+    <div class="expertise-intro">
+      <div class="fade-up">
+        <span class="section-label">Domaines d'expertise</span>
+        <h2 class="section-title">Ce que je sais faire</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="fade-up" style="padding-top:20px">
+        <p style="font-size:15px;color:var(--brown-light);line-height:1.8">Chaque domaine est expliqué simplement. Survolez les termes soulignés pour comprendre le jargon technique.</p>
+      </div>
+    </div>
+    <div class="expertise-grid" id="expertise-grid">
+      <div class="exp-card fade-up">
+        
+        <div class="exp-card-title">Tests d'intrusion</div>
+        <div class="exp-card-desc">Je simule une attaque réelle sur votre système pour trouver les failles avant les vrais pirates. C'est comme engager un <span class="tooltip-wrap"><span class="tooltip-term">hacker éthique</span><div class="tooltip-box">Un professionnel autorisé à attaquer un système pour en tester la sécurité — il travaille pour vous, pas contre vous.</div></span> pour tester vos serrures.</div>
+        <span class="exp-card-tech">Metasploit · Burp Suite · Kali Linux</span>
+      </div>
+      <div class="exp-card fade-up">
+        <div class="exp-card-icon icon-teal">🛡️</div>
+        <div class="exp-card-title">Détection d'intrusions</div>
+        <div class="exp-card-desc">Je configure des systèmes de surveillance — les <span class="tooltip-wrap"><span class="tooltip-term">IDS/IPS</span><div class="tooltip-box">Intrusion Detection/Prevention System : un "gardien numérique" qui surveille le trafic réseau et bloque les comportements suspects automatiquement.</div></span> — qui alertent ou bloquent automatiquement toute activité suspecte.</div>
+        <span class="exp-card-tech">Suricata · Snort · ELK Stack</span>
+      </div>
+      <div class="exp-card fade-up">
+        
+        <div class="exp-card-title">Sécurité réseau</div>
+        <div class="exp-card-desc">Configuration de <span class="tooltip-wrap"><span class="tooltip-term">pare-feux</span><div class="tooltip-box">Un pare-feu (firewall) filtre les connexions entrantes et sortantes, comme un videur à l'entrée d'une boîte de nuit numérique.</div></span> et de <span class="tooltip-wrap"><span class="tooltip-term">VPN</span><div class="tooltip-box">Virtual Private Network : un tunnel chiffré qui rend vos communications illisibles pour les curieux.</div></span> pour sécuriser vos échanges.</div>
+        <span class="exp-card-tech">pfSense · Cisco · OpenVPN</span>
+      </div>
+      <div class="exp-card fade-up">
+        
+        <div class="exp-card-title">Analyse & Monitoring</div>
+        <div class="exp-card-desc">Je centralise tous les journaux de sécurité dans un <span class="tooltip-wrap"><span class="tooltip-term">SIEM</span><div class="tooltip-box">Security Information and Event Management : un tableau de bord qui collecte et analyse tous les événements de sécurité pour détecter les anomalies.</div></span>, pour une vision globale et des alertes en temps réel.</div>
+        <span class="exp-card-tech">Splunk · Grafana · Elasticsearch</span>
+      </div>
+      <div class="exp-card fade-up">
+        <div class="exp-card-icon icon-teal"></div>
+        <div class="exp-card-title">Automatisation</div>
+        <div class="exp-card-desc">Développement de scripts Python et Bash pour automatiser les tâches répétitives : scans, rapports, réponses automatiques aux incidents.</div>
+        <span class="exp-card-tech">Python · Bash · PowerShell</span>
+      </div>
+      <div class="exp-card fade-up">
+        <div class="exp-card-icon icon-slate"></div>
+        <div class="exp-card-title">Formation & Audit</div>
+        <div class="exp-card-desc">Sensibilisation des équipes aux bonnes pratiques, rédaction de rapports d'audit complets avec recommandations concrètes et priorisées.</div>
+        <span class="exp-card-tech">ISO 27001 · OWASP · NIST</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-wrap">
+    <div class="skills-layout">
+      <div>
+        <span class="section-label fade-up">Compétences techniques</span>
+        <h2 class="section-title fade-up">Mon niveau</h2>
+        <div class="section-divider"></div>
+        <div class="skills-bars" id="skills-container"></div>
+      </div>
+      <div class="fade-up">
+        <div class="skills-terminal">
+          <div class="term-topbar">
+            <div class="term-dot" style="background:#ff5f57"></div>
+            <div class="term-dot" style="background:#febc2e"></div>
+            <div class="term-dot" style="background:#28c840"></div>
+            <span class="term-title">terminal — bash</span>
+          </div>
+          <div class="term-body" id="skills-terminal-body"></div>
+        </div>
+        <div style="background:var(--amber-soft);border:1px solid rgba(232,114,28,.2);border-radius:12px;padding:18px 20px;margin-top:20px;font-size:13px;color:var(--brown-mid);line-height:1.7">
+           <strong>Le terminal ci-dessus</strong> est une interface en ligne de commande — l'outil quotidien des experts en sécurité pour interagir directement avec les systèmes informatiques.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-wrap">
+    <div class="exp-layout">
+      <div>
+        <span class="section-label fade-up">Parcours professionnel</span>
+        <h2 class="section-title fade-up">Mon historique</h2>
+        <div class="section-divider"></div>
+        <p class="exp-side-text fade-up" id="exp-side-text">Des années passées à protéger des infrastructures critiques, former des équipes et répondre à des incidents de sécurité réels.</p>
+        <h3 class="exp-side-title fade-up" style="margin-bottom:16px;font-size:17px">Certifications</h3>
+        <div class="cert-list fade-up">
+          <div class="cert-item"><span class="cert-icon">🏅</span> CEH — Certified Ethical Hacker</div>
+          <div class="cert-item"><span class="cert-icon">🏅</span> CompTIA Security+</div>
+          <div class="cert-item"><span class="cert-icon">🏅</span> OSCP — Offensive Security</div>
+          <div class="cert-item"><span class="cert-icon">🏅</span> Cisco CCNA Security</div>
+        </div>
+      </div>
+      <div class="exp-timeline fade-up" id="timeline-container"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-wrap">
+    <div class="projects-intro">
+      <div class="fade-up">
+        <span class="section-label">Réalisations</span>
+        <h2 class="section-title">Mes projets</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="fade-up" style="padding-top:20px">
+        <p style="font-size:15px;color:var(--brown-light);line-height:1.8">Chaque projet représente un défi réel de cybersécurité résolu. Les technologies sont expliquées pour que tout le monde puisse comprendre l'enjeu.</p>
+      </div>
+    </div>
+    <div class="projects-grid" id="projects-container"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-wrap">
+    <div class="contact-wrap">
+      <div class="fade-up">
+        <span class="section-label">Contact</span>
+        <h2 class="section-title">Travaillons ensemble</h2>
+        <div class="section-divider"></div>
+        <div class="contact-info">
+          <p>Vous avez un projet de sécurité, un audit à réaliser ou simplement des questions ? Je réponds généralement sous 24h.</p>
+        </div>
+        <div class="contact-links">
+          <a href="#" class="contact-link"><div class="contact-link-icon"></div><div><div>GitHub</div><div class="contact-link-text">Voir mes projets open-source</div></div></a>
+          <a href="#" class="contact-link"><div class="contact-link-icon"></div><div><div>LinkedIn</div><div class="contact-link-text">Mon profil professionnel</div></div></a>
+          <a href="#" class="contact-link"><div class="contact-link-icon"></div><div><div>Email</div><div class="contact-link-text">ismael@securite.pro</div></div></a>
+          <a href="#" class="contact-link"><div class="contact-link-icon"></div><div><div>HackTheBox</div><div class="contact-link-text">Mon profil de challenges</div></div></a>
+        </div>
+      </div>
+      <div class="contact-form fade-up">
+        <div class="form-row">
+          <div class="field-group"><label class="field-label">Prénom</label><input class="field-input" type="text" placeholder="Votre prénom"></div>
+          <div class="field-group"><label class="field-label">Nom</label><input class="field-input" type="text" placeholder="Votre nom"></div>
+        </div>
+        <div class="field-group"><label class="field-label">Email</label><input class="field-input" type="email" placeholder="votre@email.com"></div>
+        <div class="field-group"><label class="field-label">Objet</label><input class="field-input" type="text" placeholder="Audit de sécurité, mission freelance..."></div>
+        <div class="field-group"><label class="field-label">Message</label><textarea class="field-input" rows="5" placeholder="Décrivez votre besoin..."></textarea></div>
+        <button class="send-btn" onclick="transmit(this)">Envoyer le message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand" id="footer-name">Ismael Koné</div>
+  <div class="footer-copy">© 2025 — Expert Cybersécurité</div>
+  <div class="footer-links">
+    <a href="#about">À propos</a>
+    <a href="#projects">Projets</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+// ── DEFAULT DATA ─────────────────────────────────
+const DEFAULT_PROFILE = {
+  name:"Ismael Koné", role:"Expert en Cybersécurité",
+  bio:"Spécialiste en cybersécurité, j'identifie les failles de vos systèmes avant les pirates, et je mets en place des défenses robustes pour protéger vos données.",
+  years:5, projects:47, certs:12
+};
+const DEFAULT_PROJECTS = [
+  {id:1,name:"IDS_Implementation",title:"Système de détection d'intrusions",desc:"Mise en place d'un gardien numérique qui surveille le réseau et alerte en temps réel dès qu'une activité suspecte est détectée.",tags:"Suricata,Python,Linux",status:"active"},
+  {id:2,name:"Firewall_Optimization",title:"Optimisation du pare-feu",desc:"Révision complète des règles du pare-feu d'une entreprise : réduction de 73% des fausses alertes et amélioration de la vitesse réseau.",tags:"pfSense,Cisco,VPN",status:"complete"},
+  {id:3,name:"Pentest_Web",title:"Audit sécurité application web",desc:"Test complet d'une application web pour trouver des failles (injections, mauvaises configurations, données exposées) avant mise en production.",tags:"Burp Suite,OWASP,Kali",status:"complete"},
+  {id:4,name:"SIEM_Dashboard",title:"Tableau de bord sécurité",desc:"Centralisation de tous les journaux de sécurité d'une infrastructure dans un tableau de bord unique, avec alertes automatiques.",tags:"Splunk,Grafana,Elasticsearch",status:"complete"},
+  {id:5,name:"Network_Scanner",title:"Outil de scan réseau",desc:"Script Python qui cartographie automatiquement un réseau, identifie les appareils connectés et signale les services potentiellement vulnérables.",tags:"Python,Nmap,JSON",status:"active"},
+];
+const DEFAULT_SKILLS = [
+  {id:1,name:"Tests d'intrusion (Pentesting)",plain:"Simuler une attaque pour trouver les failles",level:92,cat:"offensive"},
+  {id:2,name:"Détection d'intrusions (IDS/IPS)",plain:"Surveiller et bloquer les menaces en temps réel",level:90,cat:"defensive"},
+  {id:3,name:"Sécurité réseau & Firewall",plain:"Configurer des barrières numériques",level:88,cat:"network"},
+  {id:4,name:"Analyse SIEM & Logs",plain:"Lire et interpréter les journaux de sécurité",level:82,cat:"defensive"},
+  {id:5,name:"Python & Automatisation",plain:"Créer des outils de sécurité personnalisés",level:87,cat:"development"},
+  {id:6,name:"Réponse aux incidents",plain:"Gérer une cyberattaque en cours",level:80,cat:"defensive"},
+];
+const DEFAULT_EXPERIENCES = [
+  {id:1,role:"Analyste Cybersécurité Senior",company:"SecureCorp Solutions",date:"2023 — Présent",desc:"Supervision d'un centre de surveillance sécurité (SOC) : surveillance 24h/24, réponse aux incidents, gestion des systèmes de détection d'intrusion et formation des équipes internes."},
+  {id:2,role:"Testeur d'intrusion (Pentester)",company:"CyberShield Agency",date:"2021 — 2023",desc:"Réalisation de tests d'intrusion autorisés sur des applications web et des réseaux d'entreprise. Rédaction de rapports détaillés avec recommandations concrètes."},
+  {id:3,role:"Analyste Sécurité Junior",company:"DataGuard Côte d'Ivoire",date:"2019 — 2021",desc:"Mise en place de politiques de sécurité, configuration de pare-feux et sensibilisation du personnel aux risques cyber (phishing, mots de passe, etc.)."},
+];
+
+// ── STORAGE ──────────────────────────────────────
+const load = (k,d) => { try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{return d;} };
+const save = (k,v) => { try{localStorage.setItem(k,JSON.stringify(v));}catch{} };
+let profile = load('pro_profile', DEFAULT_PROFILE);
+let projects = load('pro_projects', DEFAULT_PROJECTS);
+let skills = load('pro_skills', DEFAULT_SKILLS);
+let experiences = load('pro_experiences', DEFAULT_EXPERIENCES);
+
+// ── RENDER ───────────────────────────────────────
+function renderProfile() {
+  const initials = profile.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  ['nav-initials','card-initials'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=initials; });
+  ['nav-name','footer-name'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=profile.name; });
+  const cn=document.getElementById('card-name'); if(cn) cn.textContent=profile.name;
+  const cr=document.getElementById('card-role'); if(cr) cr.textContent=profile.role;
+  ['stat-years','stat-proj','stat-certs'].forEach((id,i) => {
+    const el=document.getElementById(id);
+    if(el){ el.dataset.target=[profile.years,profile.projects,profile.certs][i]; }
+  });
+  const ht=document.getElementById('hero-title');
+  if(ht) ht.innerHTML = `Je protège<br>vos systèmes <em id="hero-em">numériques</em>`;
+  // fill form
+  document.getElementById('prof-name').value=profile.name;
+  document.getElementById('prof-role').value=profile.role;
+  document.getElementById('prof-bio').value=profile.bio;
+  document.getElementById('prof-years').value=profile.years;
+  document.getElementById('prof-projects').value=profile.projects;
+  document.getElementById('prof-certs').value=profile.certs;
+}
+
+function renderProjects() {
+  const c = document.getElementById('projects-container');
+  if(!projects.length){ c.innerHTML='<div class="proj-empty"><span>📁</span>Aucun projet — ajoutez-en via l\'espace Admin (Ctrl+Shift+A)</div>'; renderProjectsList(); return; }
+  c.innerHTML = projects.map(p => `
+    <div class="proj-card fade-up visible">
+      <div class="proj-card-top">
+        <div class="proj-icon">📁</div>
+        <span class="proj-badge ${p.status==='active'?'badge-active':'badge-complete'}">${p.status==='active'?'En cours':'Terminé'}</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-title">${p.title}</div>
+        <div class="proj-desc">${p.desc}</div>
+        <div class="proj-tags">${p.tags.split(',').map(t=>`<span class="proj-tag">${t.trim()}</span>`).join('')}</div>
+      </div>
+    </div>`).join('');
+  renderProjectsList();
+}
+
+function renderProjectsList() {
+  document.getElementById('projects-list').innerHTML = projects.map(p=>`
+    <div class="item-card"><div class="item-info"><div class="item-title">${p.title}</div><div class="item-meta">${p.status==='active'?'En cours':'Terminé'}</div></div>
+    <div class="item-actions"><button class="btn-del" onclick="deleteProject(${p.id})">Suppr.</button></div></div>`).join('')
+    || '<div style="color:var(--brown-light);font-size:13px">Aucun projet.</div>';
+}
+
+const CAT_LABELS = {offensive:'Attaque',defensive:'Défense',development:'Développement',network:'Réseau',other:'Autre'};
+const CAT_CSS = {offensive:'cat-offensive',defensive:'cat-defensive',development:'cat-development',network:'cat-network',other:'cat-other'};
+
+function renderSkills() {
+  const c = document.getElementById('skills-container');
+  const t = document.getElementById('skills-terminal-body');
+  if(!skills.length){ c.innerHTML='<p style="color:var(--brown-light)">Aucune compétence ajoutée.</p>'; if(t) t.innerHTML=''; renderSkillsList(); return; }
+  c.innerHTML = skills.map(s=>`
+    <div class="skill-item fade-up visible">
+      <div class="skill-header">
+        <div><div class="skill-name">${s.name}</div><div class="skill-plain">${s.plain||''}</div></div>
+        <div class="skill-pct">${s.level}%</div>
+      </div>
+      <div class="skill-track"><div class="skill-fill" style="width:${s.level}%"></div></div>
+      <span class="skill-cat-badge ${CAT_CSS[s.cat]||'cat-other'}">${CAT_LABELS[s.cat]||s.cat}</span>
+    </div>`).join('');
+
+  // Terminal
+  const grouped = {};
+  skills.forEach(s=>{ if(!grouped[s.cat]) grouped[s.cat]=[]; grouped[s.cat].push(s); });
+  let html = `<div><span class="t-cmd">root@IK:~$</span> <span class="t-flag">skills</span> --list<br><br></div>`;
+  Object.entries(grouped).forEach(([cat,items])=>{
+    html += `<div class="t-section"># ${CAT_LABELS[cat]||cat}</div>`;
+    items.forEach(s=>{
+      const lvl = s.level>=85?`<span class="t-expert">EXPERT</span>`:s.level>=70?`<span class="t-avance">AVANCÉ</span>`:`<span class="t-moyen">INTERMÉDIAIRE</span>`;
+      html += `<div><span class="t-plus">[+]</span> <span class="t-name">${s.name}</span> <span class="t-arrow">→</span> ${lvl}</div>`;
+    });
+    html += '<br>';
+  });
+  html += `<div><span class="t-cmd">root@IK:~$</span> <span class="t-cursor">█</span></div>`;
+  if(t) t.innerHTML = html;
+  renderSkillsList();
+}
+
+function renderSkillsList() {
+  document.getElementById('skills-list').innerHTML = skills.map(s=>`
+    <div class="item-card"><div class="item-info"><div class="item-title">${s.name}</div><div class="item-meta">${CAT_LABELS[s.cat]||s.cat} · ${s.level}%</div></div>
+    <div class="item-actions"><button class="btn-del" onclick="deleteSkill(${s.id})">Suppr.</button></div></div>`).join('')
+    || '<div style="color:var(--brown-light);font-size:13px">Aucune compétence.</div>';
+}
+
+function renderExperiences() {
+  const c = document.getElementById('timeline-container');
+  if(!experiences.length){ c.innerHTML='<div class="exp-empty">Aucune expérience — ajoutez-en via l\'Admin</div>'; renderExpList(); return; }
+  c.innerHTML = experiences.map(e=>`
+    <div class="exp-item fade-up visible">
+      <div class="exp-dot"></div>
+      <div class="exp-card-wrap">
+        <div class="exp-period">${e.date}</div>
+        <div class="exp-role">${e.role}</div>
+        <div class="exp-company">${e.company}</div>
+        <div class="exp-desc">${e.desc}</div>
+      </div>
+    </div>`).join('');
+  renderExpList();
+}
+
+function renderExpList() {
+  document.getElementById('exp-list').innerHTML = experiences.map(e=>`
+    <div class="item-card"><div class="item-info"><div class="item-title">${e.role}</div><div class="item-meta">${e.company} · ${e.date}</div></div>
+    <div class="item-actions"><button class="btn-del" onclick="deleteExp(${e.id})">Suppr.</button></div></div>`).join('')
+    || '<div style="color:var(--brown-light);font-size:13px">Aucune expérience.</div>';
+}
+
+// ── CRUD ─────────────────────────────────────────
+const v = id => document.getElementById(id).value.trim();
+function addProject(){
+  const name=v('p-name'),title=v('p-title'),desc=v('p-desc'),tags=v('p-tags'),status=v('p-status');
+  if(!title){toast(' Le titre est requis');return;}
+  projects.push({id:Date.now(),name:name||title,title,desc,tags,status});
+  save('pro_projects',projects); renderProjects(); ['p-name','p-title','p-desc','p-tags'].forEach(id=>document.getElementById(id).value=''); toast('✓ Projet ajouté');
+}
+function deleteProject(id){ projects=projects.filter(p=>p.id!==id); save('pro_projects',projects); renderProjects(); toast('Projet supprimé'); }
+function addSkill(){
+  const name=v('s-name'),plain=v('s-plain'),level=parseInt(v('s-level')),cat=v('s-cat');
+  if(!name||isNaN(level)){toast(' Nom et niveau requis');return;}
+  skills.push({id:Date.now(),name,plain,level:Math.min(100,Math.max(0,level)),cat});
+  save('pro_skills',skills); renderSkills(); document.getElementById('s-name').value=''; document.getElementById('s-plain').value=''; document.getElementById('s-level').value=''; toast('✓ Compétence ajoutée');
+}
+function deleteSkill(id){ skills=skills.filter(s=>s.id!==id); save('pro_skills',skills); renderSkills(); toast('Compétence supprimée'); }
+function addExperience(){
+  const role=v('e-role'),company=v('e-company'),date=v('e-date'),desc=v('e-desc');
+  if(!role){toast(' Le poste est requis');return;}
+  experiences.unshift({id:Date.now(),role,company,date,desc});
+  save('pro_experiences',experiences); renderExperiences(); ['e-role','e-company','e-date','e-desc'].forEach(id=>document.getElementById(id).value=''); toast('✓ Expérience ajoutée');
+}
+function deleteExp(id){ experiences=experiences.filter(e=>e.id!==id); save('pro_experiences',experiences); renderExperiences(); toast('Expérience supprimée'); }
+function saveProfile(){
+  profile={name:v('prof-name')||profile.name,role:v('prof-role')||profile.role,bio:v('prof-bio')||profile.bio,years:parseInt(v('prof-years'))||profile.years,projects:parseInt(v('prof-projects'))||profile.projects,certs:parseInt(v('prof-certs'))||profile.certs};
+  save('pro_profile',profile); renderProfile(); toast('✓ Profil sauvegardé');
+}
+
+// ── ADMIN ────────────────────────────────────────
+const ADMIN_PASSWORD = 'K@ne@0075350#';
+let adminUnlocked = false;
+function openAdmin(){ if(adminUnlocked){ document.getElementById('admin-panel').classList.add('open'); return; } const m=document.getElementById('pw-modal'); m.classList.add('open'); setTimeout(()=>document.getElementById('pw-input').focus(),100); }
+function closeAdmin(){ document.getElementById('admin-panel').classList.remove('open'); }
+function closePwModal(){ document.getElementById('pw-modal').classList.remove('open'); document.getElementById('pw-input').value=''; document.getElementById('pw-error').textContent=''; }
+function checkPassword(){ const input=v('pw-input'),err=document.getElementById('pw-error'); if(input===ADMIN_PASSWORD){ adminUnlocked=true; closePwModal(); document.getElementById('admin-panel').classList.add('open'); toast('✓ Accès administrateur accordé'); }else{ err.textContent='Mot de passe incorrect'; document.getElementById('pw-input').value=''; setTimeout(()=>err.textContent='',2000); } }
+function switchTab(tabId,btn){ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active')); document.getElementById(tabId).classList.add('active'); btn.classList.add('active'); }
+document.addEventListener('keydown',e=>{ if(e.ctrlKey&&e.shiftKey&&e.key==='A'){ e.preventDefault(); openAdmin(); } });
+
+// ── TOAST ────────────────────────────────────────
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+
+// ── TRANSMIT ─────────────────────────────────────
+function transmit(btn){ btn.textContent='✓ Message envoyé !'; setTimeout(()=>btn.textContent='Envoyer le message →',3000); }
+
+// ── SCROLL ANIMATIONS + COUNTERS ─────────────────
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('[data-target]').forEach(el=>{
+        const target=parseInt(el.dataset.target); let cur=0;
+        const timer=setInterval(()=>{ cur=Math.min(cur+target/50,target); el.textContent=Math.floor(cur); if(cur>=target)clearInterval(timer); },30);
+      });
+    }
+  });
+},{threshold:.12});
+document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+
+// ── NAV SCROLL ────────────────────────────────────
+window.addEventListener('scroll',()=>{ document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>30); });
+
+// ── INIT ─────────────────────────────────────────
+renderProfile();
+renderProjects();
+renderSkills();
+renderExperiences();
+// Observe dynamically added elements
+setTimeout(()=>document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el)),100);
+</script>
+</body>
+</html>
