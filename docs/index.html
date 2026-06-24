@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KONE ISMAEL — Portfolio Créatif</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --accent: #f59e0b;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- Background Animation --- */
+        .blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            filter: blur(80px);
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: move 20s infinite alternate;
+        }
+
+        .blob-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -100px;
+            left: -100px;
+        }
+
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--secondary);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            top: 40%;
+            left: 60%;
+            animation-delay: -10s;
+        }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(100px, 50px) scale(1.1); }
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: 0.3s;
+        }
+
+        nav.scrolled {
+            padding: 15px 50px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dim);
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-main);
+        }
+
+        /* --- Hero Section --- */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(40px, 8vw, 90px);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-content h1 span {
+            display: block;
+            font-style: italic;
+            color: var(--secondary);
+        }
+
+        .hero-content p {
+            font-size: clamp(16px, 2vw, 20px);
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .btn-main {
+            padding: 15px 40px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.5);
+        }
+
+        /* --- Shared Sections --- */
+        section {
+            padding: 100px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(30px, 5vw, 50px);
+            margin-bottom: 50px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* --- About --- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: var(--text-dim);
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .image-box {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        /* --- Skills --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .skill-icon {
+            font-size: 30px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .skill-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .skill-level {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 15px;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            width: 0;
+            transition: 1.5s ease-in-out;
+        }
+
+        /* --- Projects --- */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+
+        .project-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .project-img {
+            height: 200px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+        }
+
+        .project-info {
+            padding: 25px;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* --- Experience --- */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--glass-border);
+        }
+
+        .exp-item {
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        .exp-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .exp-date {
+            color: var(--secondary);
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* --- Contact --- */
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 50px;
+        }
+
+        .contact-info h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .contact-links {
+            margin-top: 30px;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+
+        .contact-link:hover {
+            color: var(--primary);
+        }
+
+        .contact-form {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* --- Footer --- */
+        footer {
+            padding: 50px;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-dim);
+        }
+
+        /* --- ADMIN PANEL --- */
+        #admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100vh;
+            background: #1e293b;
+            z-index: 10000;
+            padding: 30px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        #admin-panel.open { display: block; }
+        .admin-header { display: flex; justify-content: space-between; margin-bottom: 30px; }
+        .admin-close { cursor: pointer; font-size: 24px; }
+        .admin-section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .admin-section h3 { margin-bottom: 15px; color: var(--accent); }
+        .admin-list-item { display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.2); margin-bottom: 5px; border-radius: 5px; font-size: 12px; }
+        .btn-del { color: #f87171; cursor: pointer; }
+
+        /* --- MODAL --- */
+        #pw-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 20000;
+            align-items: center;
+            justify-content: center;
+        }
+        #pw-modal.open { display: flex; }
+        .pw-box { background: #1e293b; padding: 40px; border-radius: 20px; width: 320px; }
+
+        /* --- Toast --- */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            padding: 10px 20px;
+            border-radius: 10px;
+            z-index: 30000;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .about-grid, .contact-content { grid-template-columns: 1fr; }
+            nav { padding: 20px; }
+            .nav-links { display: none; }
+            section { padding: 60px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div id="toast">Message</div>
+
+    <nav id="navbar">
+        <div class="logo">KONE.I</div>
+        <ul class="nav-links">
+            <li><a href="#hero">Accueil</a></li>
+            <li><a href="#about">À propos</a></li>
+            <li><a href="#skills">Compétences</a></li>
+            <li><a href="#experience">Expériences</a></li>
+            <li><a href="#projects">Projets</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="hero">
+        <div class="hero-content">
+            <h1>KONE <span>ISMAEL</span></h1>
+            <p id="hero-subtitle">Créateur d'expériences numériques innovantes et sécurisées. Alliant design créatif et expertise technique.</p>
+            <a href="#projects" class="btn-main">Découvrir mon travail</a>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2 class="section-title">À propos</h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <p id="about-text-1">Passionné par l'innovation technologique, j'explore les frontières entre le design et la performance. Mon approche est centrée sur l'utilisateur et la sécurité.</p>
+                <p id="about-text-2">Avec plusieurs années d'expérience, j'ai développé une vision transversale me permettant de mener des projets complexes de la conception à la mise en production.</p>
+            </div>
+            <div class="about-image">
+                <div class="image-box">
+                    ✨
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <h2 class="section-title">Compétences</h2>
+        <div class="skills-grid" id="skills-container">
+            <!-- Dynamique -->
+        </div>
+    </section>
+
+    <section id="experience">
+        <h2 class="section-title">Expériences</h2>
+        <div class="timeline" id="experience-container">
+            <!-- Dynamique -->
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2 class="section-title">Projets</h2>
+        <div class="projects-grid" id="projects-container">
+            <!-- Dynamique -->
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title">Contact</h2>
+        <div class="contact-content">
+            <div class="contact-info">
+                <h3>Discutons de votre prochain projet.</h3>
+                <p>Disponible pour des missions freelances ou des collaborations passionnantes.</p>
+                <div class="contact-links">
+                    <a href="https://github.com/maels-k/myPortfolio" class="contact-link" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                    <a href="https://www.linkedin.com/in/koneismael" class="contact-link" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                    <a href="mailto:ikone.mael@gmail.com" class="contact-link" target="_blank"><i class="fas fa-envelope"></i> Email</a>
+                </div>
+            </div>
+            <div class="contact-form">
+                <div class="form-group">
+                    <input type="text" placeholder="Votre Nom">
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Votre Email">
+                </div>
+                <div class="form-group">
+                    <textarea rows="5" placeholder="Votre Message"></textarea>
+                </div>
+                <button class="btn-submit" onclick="showSuccess()">Envoyer</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 KONE ISMAEL — Design & Code avec ❤️</p>
+    </footer>
+
+    <!-- ADMIN MODAL -->
+    <div id="pw-modal">
+        <div class="pw-box">
+            <h3 style="margin-bottom:15px">Admin Access</h3>
+            <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')login()">
+            <button class="btn-submit" style="margin-top:15px" onclick="login()">Login</button>
+            <button class="btn-submit" style="margin-top:10px; background:transparent; border:1px solid var(--glass-border)" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="admin-panel">
+        <div class="admin-header">
+            <h3>Admin Panel</h3>
+            <span class="admin-close" onclick="toggleAdmin()">×</span>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="admin-section">
+            <h3>Profil</h3>
+            <input class="admin-input" id="adm-name" placeholder="Nom" style="margin-bottom:5px">
+            <input class="admin-input" id="adm-subtitle" placeholder="Sous-titre" style="margin-bottom:5px">
+            <textarea class="admin-input" id="adm-about1" placeholder="Texte à propos 1" style="margin-bottom:5px"></textarea>
+            <textarea class="admin-input" id="adm-about2" placeholder="Texte à propos 2" style="margin-bottom:5px"></textarea>
+            <button class="btn-submit" onclick="saveProfile()">Enregistrer Profil</button>
+        </div>
+
+        <!-- SKILLS -->
+        <div class="admin-section">
+            <h3>Compétences</h3>
+            <input class="admin-input" id="adm-skill-name" placeholder="Nom de la compétence" style="margin-bottom:5px">
+            <input class="admin-input" id="adm-skill-level" type="number" placeholder="Niveau (0-100)" style="margin-bottom:5px">
+            <button class="btn-submit" onclick="addSkill()">Ajouter Compétence</button>
+            <div id="adm-skills-list" style="margin-top:10px"></div>
+        </div>
+
+        <!-- EXPERIENCE -->
+        <div class="admin-section">
+            <h3>Expérience</h3>
+            <input class="admin-input" id="adm-exp-date" placeholder="Date" style="margin-bottom:5px">
+            <input class="admin-input" id="adm-exp-title" placeholder="Titre" style="margin-bottom:5px">
+            <textarea class="admin-input" id="adm-exp-desc" placeholder="Description" style="margin-bottom:5px"></textarea>
+            <button class="btn-submit" onclick="addExperience()">Ajouter Expérience</button>
+            <div id="adm-exp-list" style="margin-top:10px"></div>
+        </div>
+
+        <!-- PROJECTS -->
+        <div class="admin-section">
+            <h3>Projets</h3>
+            <input class="admin-input" id="adm-proj-title" placeholder="Titre" style="margin-bottom:5px">
+            <textarea class="admin-input" id="adm-proj-desc" placeholder="Description" style="margin-bottom:5px"></textarea>
+            <input class="admin-input" id="adm-proj-tags" placeholder="Tags (virgule)" style="margin-bottom:5px">
+            <button class="btn-submit" onclick="addProject()">Ajouter Projet</button>
+            <div id="adm-proj-list" style="margin-top:10px"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const DEFAULT_DATA = {
+            profile: {
+                name: "KONE ISMAEL",
+                subtitle: "Créateur d'expériences numériques innovantes et sécurisées. Alliant design créatif et expertise technique.",
+                about1: "Passionné par l'innovation technologique, j'explore les frontières entre le design et la performance. Mon approche est centrée sur l'utilisateur et la sécurité.",
+                about2: "Avec plusieurs années d'expérience, j'ai développé une vision transversale me permettant de mener des projets complexes de la conception à la mise en production."
+            },
+            skills: [
+                { id: 1, name: "UI/UX Design", level: 90 },
+                { id: 2, name: "Frontend Development", level: 85 },
+                { id: 3, name: "Cybersécurité", level: 75 }
+            ],
+            experience: [
+                { id: 1, date: "2023 - Présent", title: "Lead Designer", desc: "Direction créative et conception d'interfaces haute fidélité." },
+                { id: 2, date: "2021 - 2023", title: "Développeur Fullstack", desc: "Création d'applications web robustes et évolutives." }
+            ],
+            projects: [
+                { id: 1, title: "Projet Alpha", desc: "Refonte complète d'une plateforme e-commerce.", tags: "React, Node, Figma" },
+                { id: 2, title: "Cyber-Guard", desc: "Outil de monitoring de sécurité réseau.", tags: "Python, Docker" }
+            ]
+        };
+
+        let data = JSON.parse(localStorage.getItem('kone_portfolio_data')) || DEFAULT_DATA;
+
+        // --- RENDER ---
+        function render() {
+            // Hero & About
+            document.querySelector('.hero-content h1').innerHTML = `${data.profile.name.split(' ')[0]} <span>${data.profile.name.split(' ')[1] || ''}</span>`;
+            document.getElementById('hero-subtitle').textContent = data.profile.subtitle;
+            document.getElementById('about-text-1').textContent = data.profile.about1;
+            document.getElementById('about-text-2').textContent = data.profile.about2;
+
+            // Skills
+            const skillsContainer = document.getElementById('skills-container');
+            skillsContainer.innerHTML = data.skills.map(s => `
+                <div class="skill-card">
+                    <div class="skill-icon"><i class="fas fa-code"></i></div>
+                    <h3>${s.name}</h3>
+                    <div class="skill-level"><div class="skill-progress" style="width:${s.level}%"></div></div>
+                </div>
+            `).join('');
+
+            // Experience
+            const expContainer = document.getElementById('experience-container');
+            expContainer.innerHTML = data.experience.map(e => `
+                <div class="exp-item">
+                    <span class="exp-date">${e.date}</span>
+                    <h3>${e.title}</h3>
+                    <p>${e.desc}</p>
+                </div>
+            `).join('');
+
+            // Projects
+            const projContainer = document.getElementById('projects-container');
+            projContainer.innerHTML = data.projects.map(p => `
+                <div class="project-card">
+                    <div class="project-img">🚀</div>
+                    <div class="project-info">
+                        <h3>${p.title}</h3>
+                        <p>${p.desc}</p>
+                        <div class="project-tags">
+                            ${p.tags.split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Admin Lists
+            renderAdminLists();
+        }
+
+        function renderAdminLists() {
+            document.getElementById('adm-skills-list').innerHTML = data.skills.map(s => `
+                <div class="admin-list-item"><span>${s.name} (${s.level}%)</span> <span class="btn-del" onclick="deleteItem('skills', ${s.id})">Delete</span></div>
+            `).join('');
+            document.getElementById('adm-exp-list').innerHTML = data.experience.map(e => `
+                <div class="admin-list-item"><span>${e.title}</span> <span class="btn-del" onclick="deleteItem('experience', ${e.id})">Delete</span></div>
+            `).join('');
+            document.getElementById('adm-proj-list').innerHTML = data.projects.map(p => `
+                <div class="admin-list-item"><span>${p.title}</span> <span class="btn-del" onclick="deleteItem('projects', ${p.id})">Delete</span></div>
+            `).join('');
+
+            // Fill admin inputs
+            document.getElementById('adm-name').value = data.profile.name;
+            document.getElementById('adm-subtitle').value = data.profile.subtitle;
+            document.getElementById('adm-about1').value = data.profile.about1;
+            document.getElementById('adm-about2').value = data.profile.about2;
+        }
+
+        // --- ADMIN LOGIC ---
+        const PASS = "kone2025";
+        let isLogged = false;
+
+        function login() {
+            if (document.getElementById('pw-input').value === PASS) {
+                isLogged = true;
+                closeModal();
+                toggleAdmin();
+                toast("Welcome, Ismael");
+            } else {
+                toast("Wrong Password");
+            }
+        }
+
+        function closeModal() { document.getElementById('pw-modal').classList.remove('open'); }
+        function toggleAdmin() { document.getElementById('admin-panel').classList.toggle('open'); }
+
+        window.addEventListener('keydown', e => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                e.preventDefault();
+                if (isLogged) toggleAdmin();
+                else document.getElementById('pw-modal').classList.add('open');
+            }
+        });
+
+        function saveProfile() {
+            data.profile = {
+                name: document.getElementById('adm-name').value,
+                subtitle: document.getElementById('adm-subtitle').value,
+                about1: document.getElementById('adm-about1').value,
+                about2: document.getElementById('adm-about2').value
+            };
+            save();
+        }
+
+        function addSkill() {
+            const name = document.getElementById('adm-skill-name').value;
+            const level = document.getElementById('adm-skill-level').value;
+            if (!name || !level) return;
+            data.skills.push({ id: Date.now(), name, level });
+            save();
+            document.getElementById('adm-skill-name').value = '';
+            document.getElementById('adm-skill-level').value = '';
+        }
+
+        function addExperience() {
+            const date = document.getElementById('adm-exp-date').value;
+            const title = document.getElementById('adm-exp-title').value;
+            const desc = document.getElementById('adm-exp-desc').value;
+            if (!date || !title) return;
+            data.experience.unshift({ id: Date.now(), date, title, desc });
+            save();
+            document.getElementById('adm-exp-date').value = '';
+            document.getElementById('adm-exp-title').value = '';
+            document.getElementById('adm-exp-desc').value = '';
+        }
+
+        function addProject() {
+            const title = document.getElementById('adm-proj-title').value;
+            const desc = document.getElementById('adm-proj-desc').value;
+            const tags = document.getElementById('adm-proj-tags').value;
+            if (!title) return;
+            data.projects.push({ id: Date.now(), title, desc, tags });
+            save();
+            document.getElementById('adm-proj-title').value = '';
+            document.getElementById('adm-proj-desc').value = '';
+            document.getElementById('adm-proj-tags').value = '';
+        }
+
+        function deleteItem(type, id) {
+            data[type] = data[type].filter(item => item.id !== id);
+            save();
+        }
+
+        function save() {
+            localStorage.setItem('kone_portfolio_data', JSON.stringify(data));
+            render();
+            toast("Changes saved locally");
+        }
+
+        function toast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        }
+
+        function showSuccess() {
+            toast("Message envoyé ! (Simulation)");
+        }
+
+        // --- INIT ---
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        render();
+    </script>
+</body>
+</html>
